@@ -1,0 +1,6 @@
+for idx in {1..1000}
+do
+    sleep 5
+    echo "#$idx\n"
+    docker exec -it mysql mysql -u root -proot -e "SELECT COUNT(*) as count, 'current-state' as type FROM testCurrentState.Users UNION  SELECT COUNT(*) as count, 'latest-mysql' as type FROM testLatestMySQL.Users UNION  SELECT COUNT(*) as count, 'latest-sequelize' as type FROM testLatestSequelize.Users UNION  SELECT COUNT(*) as count, 'latest-prisma' as type FROM testLatestPrisma.Users;"
+done
