@@ -6,10 +6,10 @@ export default {
     port: 3306,
     database: "test",
     pool: {
-      max: 20,
+      max: 50,
       min: 1,
     },
   },
-  parallelismDegree: 1_000,
-  iterationSize: 5_000,
+  parallelismDegree: 50,
+  iterationSize: 10000,
 }

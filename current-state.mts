@@ -13,22 +13,40 @@ const dbReset = async () => {
   await User.sync();
 }
 
-await dbReset();
-const writeDuration = await benchmark(async () => {
-  await Promise.all(range(config.parallelismDegree).map(async () => {
-    for(const id of range(config.iterationSize)) {
-      await User.create({
-        username: `some-user-${id}`,
-        birthday: new Date(1980, 6, 20),
-      });
-    }
-  }));
-});
+let writeDuration: string | number = 'N/A';
+if(process.argv.length < 3 || process.argv[2] !== 'readOnly') {
+  await dbReset();
+  writeDuration = await benchmark(async () => {
+    await Promise.all(range(config.parallelismDegree).map(async () => {
+      for (const id of range(config.iterationSize)) {
+        await User.create({
+          username: `some-user-${id}`,
+          birthday: new Date(1980, 6, 20),
+        });
+      }
+    }));
+  });
+}
 
-const readDuration = await benchmark(async () => {
-  const users = await User.findAll();
-  users.map((user: any) => user.toJSON().id);
-});
+let readDuration: string | number = 'N/A';
+if(process.argv.length < 3 || process.argv[2] !== 'writeOnly') {
+  readDuration = await benchmark(async () => {
+    const users = await User.findAll();
+    const userIds = users.map((user: any) => user.toJSON().username);
+
+    await Promise.all(range(config.parallelismDegree).map(async () => {
+      for (const id of range(config.iterationSize)) {
+        const user: any = await User.findOne({
+          where: {
+            username: userIds[Math.floor(Math.random() * userIds.length)]
+          }
+        });
+
+        user.toJSON();
+      }
+    }));
+  });
+}
 
 await sequelize.close();
 console.log(`Test took ${writeDuration} to write and ${readDuration} to read`);

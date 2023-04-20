@@ -9,6 +9,7 @@
     "start:latest-sequelize": "ts-node --esm latest-sequelize.mts",
     "start:latest-prisma": "ts-node --esm latest-prisma.mts",
     "start:sample": "./sample",
+    "start:miu": "node miu.js",
     "test": "jest --runInBand"
   },
   "author": "",
