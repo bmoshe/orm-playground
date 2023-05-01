@@ -2,7 +2,13 @@ import {benchmark, range} from './shared.ts';
 import config from "./config.ts";
 
 import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+    datasources: {
+        db: {
+            url: 'mysql://root:root@localhost:3306/testLatestPrisma?connection_limit=100',
+        }
+    }
+});
 
 const dbReset = async () => {
     await prisma.$executeRawUnsafe('DROP TABLE IF EXISTS Users;');
@@ -41,11 +47,11 @@ if(process.argv.length < 3 || process.argv[2] !== 'writeOnly') {
         const userIds = users.map((user) => user.username);
 
         await Promise.all(range(config.parallelismDegree).map(async () => {
-            for (const id of range(config.iterationSize)) {
-                await prisma.users.findUnique({
+            for(let i = 0; i < config.iterationSize; i++) {
+                await prisma.users.findFirst({
                     where: {
                         username: userIds[Math.floor(Math.random() * userIds.length)]
-                    }
+                    },
                 });
             }
         }));

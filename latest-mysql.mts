@@ -36,7 +36,7 @@ if(process.argv.length < 3 || process.argv[2] !== 'writeOnly') {
     const userIds = users.map((user: any) => user.toJSON().username);
 
     await Promise.all(range(config.parallelismDegree).map(async () => {
-      for (const id of range(config.iterationSize)) {
+      for(let i = 0; i < config.iterationSize; i++) {
         const user: any = await User.findOne({
           where: {
             username: userIds[Math.floor(Math.random() * userIds.length)]

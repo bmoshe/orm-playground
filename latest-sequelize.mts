@@ -1,6 +1,6 @@
 import { Sequelize, Model, DataTypes } from 'sequelize-latest';
 import mysql from 'mysql-current';
-import {benchmark, range} from './shared.ts';
+import { benchmark, range } from './shared.ts';
 import config from './config.ts';
 
 const sequelize = new Sequelize(`${config.db.database}LatestSequelize`, config.db.username, config.db.password, { dialect: 'mysql', dialectModule: mysql, pool: config.db.pool, logging: false });
@@ -37,14 +37,14 @@ if(process.argv.length < 3 || process.argv[2] !== 'writeOnly') {
     const userIds = users.map((user: any) => user.toJSON().username);
 
     await Promise.all(range(config.parallelismDegree).map(async () => {
-      for (const id of range(config.iterationSize)) {
-        const user = await User.findOne({
-          where: {
-            username: userIds[Math.floor(Math.random() * userIds.length)]
-          }
-        });
+      for(let i = 0; i < config.iterationSize; i++) {
+          const user: any = await User.findOne({
+            where: {
+              username: userIds[Math.floor(Math.random() * userIds.length)]
+            }
+          });
 
-        user.toJSON();
+          user.toJSON();
       }
     }));
   });
