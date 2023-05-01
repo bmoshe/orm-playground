@@ -1,0 +1,8 @@
+state,test,user,system,cpu,Cpu utilization,Overall latency
+current-state,write,5.22,0.58,100%,5.8,5.783
+current-state,read,31.71,5.41,42%,37.12,1:27.84
+latest-prisma,write,9.53,3.69,112%,13.22,11.755
+latest-prisma,read,2.71,0.18,106%,2.89,2.708
+latest-prisma-no-batch,read,18.50,5.53,214%,24.03,11.216
+latest-sequelize,write,4.72,0.48,93%,5.20,5.092
+latest-sequelize,read,25.73,4.48,33%,30.21,1:30.27
